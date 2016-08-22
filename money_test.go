@@ -22,6 +22,9 @@ func TestParseAndString(t *testing.T) {
 		{"USD 3.5M", "3.5M usd", false},
 		{"USD 3.5 M", "3.5M usd", false},
 		{"3.5 M EUR", "3.5M eur", false},
+		{"3500 EUR", "3.5K eur", false},
+		{"500 EUR", "500 eur", false},
+		{"500.567 EUR", "500.57 eur", false},
 		{"€ 3500000 €", "3.5M €", true},
 		{"€ 35.000.00 €", "3.5M €", true},
 	}
