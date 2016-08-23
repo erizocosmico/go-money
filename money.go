@@ -1,7 +1,6 @@
 package money
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"regexp"
@@ -54,16 +53,6 @@ func (a Amount) StringBefore() string {
 		return parts[1] + parts[0]
 	}
 	return parts[0]
-}
-
-var zero = []byte("0")
-
-func trailingZeros(n int) string {
-	var buf bytes.Buffer
-	for i := 0; i < n; i++ {
-		buf.Write(zero)
-	}
-	return buf.String()
 }
 
 var (
@@ -133,7 +122,83 @@ func sepInverse(sep string) string {
 	return ","
 }
 
+var currencies = map[string][]string{
+	"Lek":  []string{"all", "lek"},
+	"؋":    []string{"؋", "afn"},
+	"$":    []string{"$", "usd", "svc", "ars", "aud", "bsd", "bbd", "bmd", "bnd", "cad", "kyd", "clp", "cop", "xcd", "svc", "fjd", "gyd", "hkd", "lrd", "mxn", "nad", "nzd", "sgd", "sbd", "srd", "tvd"},
+	"ƒ":    []string{"ƒ", "awg", "ang"},
+	"₼":    []string{"₼", "azn"},
+	"p.":   []string{"p.", "byr"},
+	"BZ$":  []string{"bz$", "bzd"},
+	"$b":   []string{"$b", "bob"},
+	"KM":   []string{"km", "bam"},
+	"P":    []string{"p", "bwp"},
+	"лв":   []string{"лв", "bgn", "kzt", "uzs"},
+	"R$":   []string{"r$", "brl"},
+	"៛":    []string{"៛", "khr"},
+	"¥":    []string{"¥", "dny", "jpy"},
+	"₡":    []string{"₡", "crc"},
+	"kn":   []string{"kn", "hrk"},
+	"₩":    []string{"₩", "kpw", "krw"},
+	"₱":    []string{"₱", "cup", "php"},
+	"Kč":   []string{"Kč", "czk"},
+	"kr":   []string{"kr", "dkk", "eek", "isk", "nok", "sek"},
+	"RD$":  []string{"rd$", "dop"},
+	"£":    []string{"£", "gbp", "egp", "fkp", "gip", "ggp", "imp", "jep", "lbp", "shp", "syp"},
+	"GEL":  []string{"gel"},
+	"€":    []string{"€", "eur"},
+	"¢":    []string{"¢", "ghc"},
+	"Q":    []string{"q", "gtq"},
+	"L":    []string{"l", "hnl"},
+	"Ft":   []string{"ft", "huf"},
+	"₹":    []string{"₹", "inr"},
+	"Rp":   []string{"rp", "idr"},
+	"﷼":    []string{"﷼", "irr", "omr", "qar", "sar", "yer"},
+	"₪":    []string{"₪", "ils"},
+	"J$":   []string{"j$", "jmd"},
+	"₭":    []string{"₭", "lak"},
+	"Ls":   []string{"ls", "lvl"},
+	"Bs":   []string{"bs", "vef"},
+	"Lt":   []string{"lt", "ltl"},
+	"ден":  []string{"ден", "mkd"},
+	"RM":   []string{"rm", "myr"},
+	"Rs":   []string{"rs", "mur", "npr", "pkr", "scr", "lkr"},
+	"₮":    []string{"₮", "mnt"},
+	"MT":   []string{"mt", "mzn"},
+	"C$":   []string{"c$", "nio"},
+	"₦":    []string{"₦", "ngn"},
+	"B/.":  []string{"b/.", "pab"},
+	"S/.":  []string{"s/.", "pen"},
+	"Gs":   []string{"gs", "pyg"},
+	"zł":   []string{"zł", "pln"},
+	"lei":  []string{"lei", "ron"},
+	"Дин.": []string{"Дин.", "rsd"},
+	"S":    []string{"s", "sos", "zar"},
+	"CHF":  []string{"chf"},
+	"NT$":  []string{"nt$", "twd"},
+	"Z$":   []string{"z$", "zwd"},
+	"TT$":  []string{"tt$", "ttd"},
+	"฿":    []string{"฿", "tbh"},
+	"₺":    []string{"₺", "tlr"},
+	"₴":    []string{"₴", "uah"},
+	"$U":   []string{"$u", "uyu"},
+	"₫":    []string{"₫", "vnd"},
+}
+
+var currenciesByAlias = make(map[string]string)
+
+func init() {
+	for c, aliases := range currencies {
+		for _, a := range aliases {
+			currenciesByAlias[a] = c
+		}
+	}
+}
+
 func identifyCurrency(curr string) string {
-	// TODO: Correctly identify currencies
-	return curr
+	c, ok := currenciesByAlias[curr]
+	if !ok {
+		return ""
+	}
+	return c
 }
