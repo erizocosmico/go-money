@@ -61,10 +61,12 @@ var (
 	errInvalidNumber = errors.New("invalid number format given")
 )
 
+// Parse returns an Amount of money with quantity and currency (if identified) and an error.
 func Parse(text string) (*Amount, error) {
 	return parse(text, ".")
 }
 
+// ParseComma parses the amount of money in the text with "," instead of "." as decimal separator.
 func ParseComma(text string) (*Amount, error) {
 	return parse(text, ",")
 }
