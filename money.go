@@ -56,7 +56,7 @@ func (a Amount) StringBefore() string {
 }
 
 var (
-	moneyRegex       = regexp.MustCompile(`^([^0-9 ]*) *([0-9][0-9,\.]*) *(k|m|mm)? *([^0-9]*)$`)
+	moneyRegex       = regexp.MustCompile(`^([^0-9 ]*) *([0-9][0-9,\.]*) *(k|m{1,2})? *([^0-9]*)$`)
 	errInvalid       = errors.New("invalid money format given")
 	errInvalidNumber = errors.New("invalid number format given")
 )

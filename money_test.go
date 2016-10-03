@@ -3,7 +3,7 @@ package money
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParseAndString(t *testing.T) {
@@ -30,36 +30,40 @@ func TestParseAndString(t *testing.T) {
 		{"500.567 EUR", "500.57 €", false},
 		{"€ 3500000 €", "3.5M €", true},
 		{"35.000.00 €", "3.5M €", true},
+		{"6mm€", "6M €", false},
+		{"6m€", "6M €", false},
+		{"$6mm", "6M $", false},
+		{"$6m", "6M $", false},
 		{"aaaaa", "3.5M €", true},
 	}
 
 	for _, c := range cases {
 		a, err := Parse(c.input)
 		if c.err {
-			assert.NotNil(t, err)
+			require.NotNil(t, err, c.input)
 		} else {
-			assert.Nil(t, err)
-			assert.Equal(t, c.output, a.String())
+			require.Nil(t, err, c.input)
+			require.Equal(t, c.output, a.String(), c.input)
 		}
 	}
 }
 
 func TestParseComma(t *testing.T) {
 	a, err := ParseComma("3,5M€")
-	assert.Nil(t, err)
-	assert.Equal(t, "3.5M €", a.String())
+	require.Nil(t, err)
+	require.Equal(t, "3.5M €", a.String())
 }
 
 func TestStringComma(t *testing.T) {
-	assert.Equal(t, "3,5M €", NewAmount(3500000.0, "€").StringComma())
+	require.Equal(t, "3,5M €", NewAmount(3500000.0, "€").StringComma())
 }
 
 func TestStringBefore(t *testing.T) {
 	a, err := Parse("3.5M$")
-	assert.Nil(t, err)
-	assert.Equal(t, "$3.5M", a.StringBefore())
+	require.Nil(t, err)
+	require.Equal(t, "$3.5M", a.StringBefore())
 
 	a, err = Parse("3.5M")
-	assert.Nil(t, err)
-	assert.Equal(t, "3.5M", a.StringBefore())
+	require.Nil(t, err)
+	require.Equal(t, "3.5M", a.StringBefore())
 }
