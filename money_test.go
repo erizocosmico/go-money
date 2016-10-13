@@ -67,3 +67,26 @@ func TestStringBefore(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, "3.5M", a.StringBefore())
 }
+
+func TestTrimDecimal(t *testing.T) {
+	tests := []struct {
+		input    float64
+		expected string
+	}{
+		{0, "0"},
+		{-0, "0"},
+		{0.375, "0.38"},
+		{2, "2"},
+		{-2, "-2"},
+		{2.1, "2.1"},
+		{2.10, "2.1"},
+		{-2.10, "-2.1"},
+		{100.001, "100"},
+		{100.005, "100"},
+		{100.006, "100.01"},
+	}
+
+	for _, test := range tests {
+		require.Equal(t, test.expected, trimDecimal(test.input))
+	}
+}
