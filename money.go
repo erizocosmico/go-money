@@ -34,11 +34,15 @@ func (a Amount) String() string {
 	} else {
 		n = a.Quantity
 	}
-	num := strings.TrimRight(strings.TrimRight(fmt.Sprintf("%.2f", n), "0"), ".")
+	num := trimDecimal(n)
 	if a.Currency != "" {
 		return fmt.Sprintf("%s%s %s", num, suffix, a.Currency)
 	}
-	return fmt.Sprintf("%s%s", num, suffix)
+	return fmt.Sprint(num, suffix)
+}
+
+func trimDecimal(n float64) string {
+	return strings.TrimRight(strings.TrimRight(fmt.Sprintf("%.2f", n), "0"), ".")
 }
 
 // StringComma returns the money as string in the format "[QUANTITY](,DECIMAL)(M|k)( CURRENCY)".
