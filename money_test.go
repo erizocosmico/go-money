@@ -1,6 +1,8 @@
 package money
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -46,6 +48,15 @@ func TestParseAndString(t *testing.T) {
 			require.Equal(t, c.output, a.String(), c.input)
 		}
 	}
+}
+
+func TestParseOutOfRangeFailing(t *testing.T) {
+	s := make([]string, 310)
+	for i := range s {
+		s[i] = "0"
+	}
+	_, err := Parse(fmt.Sprint("1", strings.Join(s, "")))
+	require.NotNil(t, err)
 }
 
 func TestParseComma(t *testing.T) {
