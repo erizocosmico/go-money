@@ -1,7 +1,6 @@
 package money
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -51,11 +50,7 @@ func TestParseAndString(t *testing.T) {
 }
 
 func TestParseOutOfRangeFailing(t *testing.T) {
-	s := make([]string, 310)
-	for i := range s {
-		s[i] = "0"
-	}
-	_, err := Parse(fmt.Sprint("1", strings.Join(s, "")))
+	_, err := Parse("1" + strings.Repeat("0", 310))
 	require.NotNil(t, err)
 }
 
